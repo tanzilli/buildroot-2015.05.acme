@@ -1,0 +1,7 @@
+config BR2_TARGET_ACMEAT91BOOTSTRAP
+	bool "Acme AT91bootstrap 3.7"
+	default y
+	help
+	  Build and install the Acme fork of AT91bootstrap target image, 
+	  Atmel secondlevel bootloader. The image is named
+	  boot.bin in output/images.
