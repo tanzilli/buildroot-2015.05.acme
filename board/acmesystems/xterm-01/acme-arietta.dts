@@ -75,48 +75,32 @@
 				pinctrl-0 = <&pinctrl_usart2>;
 				status ="disabled";
 			};
+			
 			spi1: spi@f0004000 {
-				status = "disabled";
-				cs-gpios = <&pioA 8 0>, <&pioA 0 0>, <&pioA 31 0>, <&pioA 30 0>;
+				status = "okay";
+				cs-gpios = <&pioA 8 0>;
+
 				device@0 {
-					compatible = "spidev";
-					spi-max-frequency = <50000000>;	    // 50 MHz
+					rotate = <270>;
+					bgr;
+					fps = <30>;
+					compatible = "ilitek,ili9341";
+					spi-max-frequency = <50000000>;   
 					reg = <0>;
-				};
-				device@1 {
-					compatible = "spidev";
-					spi-max-frequency = <50000000>;	    // 50 MHz
-					reg = <1>;
-				};
-				device@2 {
-					compatible = "spidev";
-					spi-max-frequency = <50000000>;	    // 50 MHz
-					reg = <2>;
-				};
-				device@3 {
-					compatible = "spidev";
-					spi-max-frequency = <50000000>;	    // 50 MHz
-					reg = <3>;
+					regwidth = <8>;
+					buswidth = <8>;
+					verbose = <3>;
+					reset-gpios = <&pioC 3 0>; /* PC3 - J4.33 */
+					dc-gpios = <&pioC 4 0>;    /* PC4 - J4.31 */
 				};
 			};
 
 			adc0: adc@f804c000 {
-				status = "disabled";
-				atmel,adc-channels-used = <0xf>;
-				atmel,adc-num-channels = <4>;
 				compatible = "atmel,at91sam9x5-adc";
-				atmel,adc-startup-time = <40>;
-				atmel,adc-status-register = <0x1c>;
-				atmel,adc-trigger-register = <0x08>;
-				atmel,adc-use-external;
-				atmel,adc-vref = <3250>;
-				atmel,adc-res = <8 10>;
-				atmel,adc-res-names = "lowres", "highres";
-				atmel,adc-use-res = "highres";
-				trigger@0 {
-					trigger-name = "continuous";
-					trigger-value = <0x6>;
-				};
+				atmel,adc-clock-rate = <1000000>;
+				atmel,adc-ts-wires = <4>;
+				atmel,adc-ts-pressure-threshold = <10000>;
+				status = "okay";
 			};
 
 			pinctrl@fffff400 {
@@ -130,6 +114,7 @@
 					};
 				};
 			};
+
 			pwm0: pwm@f8034000 {
 				pinctrl-names = "default";
 				pinctrl-0 = <&pinctrl_pwm0>;
