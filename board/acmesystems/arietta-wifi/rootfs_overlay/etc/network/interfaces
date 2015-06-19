@@ -1,0 +1,25 @@
+auto lo
+iface lo inet loopback
+
+#auto eth0
+#iface eth0 inet dhcp
+
+auto usb0
+iface usb0 inet static
+address 192.168.10.10
+netmask 255.255.255.0
+gateway 192.168.10.20
+
+#Get access to your WiFi reading this article:
+#http://www.acmesystems.it/WIFI-2
+
+auto wlan0
+iface wlan0 inet dhcp
+wpa-driver wext
+wpa-ssid acme
+wpa-psk 38c309a773a6c936c31aeb8bcb5bc44d60539715524e77464759f29095bfc1f3
+wpa-ap-scan 2
+wpa-proto RSN
+wpa-pairwise CCMP
+wpa-group CCMP
+wpa-key-mgmt WPA-PSK
