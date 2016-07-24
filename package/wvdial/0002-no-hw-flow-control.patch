@@ -1,0 +1,57 @@
+https://build.opensuse.org/package/view_file/openSUSE/wvdial/wvdial-1.61_nocrtscts.patch?expand=1
+
+--- wvdial-1.61/wvdial.conf.5	2008-10-22 15:54:03.000000000 +0200
++++ wvdial-1.61_fix/wvdial.conf.5	2013-02-26 09:51:27.499326167 +0100
+@@ -69,6 +69,11 @@
+ .B wvdial
+ will communicate with your modem.  The default is 57600 baud.
+ .TP
++.I NoFlowControl
++If value is set,
++.B wvdial
++will not use hardware flow control for connections.
++.TP
+ .I "Init1 ... Init9"
+ .B wvdial
+ can use up to nine initialization strings to set up your modem.  Before
+diff -ur wvdial-1.61/wvdialer.cc wvdial-1.61_fix/wvdialer.cc
+--- wvdial-1.61/wvdialer.cc	2009-09-29 19:17:31.000000000 +0200
++++ wvdial-1.61_fix/wvdialer.cc	2013-02-26 09:56:35.321743732 +0100
+@@ -642,6 +642,7 @@
+         { "ISDN",            NULL, &options.isdn,          "", false        },
+         { "Ask Password",    NULL, &options.ask_password,  "", false        },
+         { "Dial Timeout",    NULL, &options.dial_timeout,  "", 60           },
++        { "NoFlowControl", NULL, &options.no_flow_control, "", false },
+ 
+	{ "Software Flow",    NULL, 	      &options.software_flow_control,  "", false },
+	{ "Asyncmap",  &options.asyncmap,     NULL, 	 "0x000a0000", 		  0 },
+@@ -726,7 +727,8 @@
+ 	} 
+ 	else
+ 	{
+-	    cloned = modem = new WvModem( options.modem, options.baud );
++		cloned = modem = new WvModem( options.modem, options.baud,
++		options.no_flow_control == 1 ? false : true );
+ 	}
+ 	if( !modem->isok() ) 
+ 	{
+@@ -1206,7 +1208,7 @@
+         options.where_pppd,
+ 	speed,
+ 	"modem",
+-	(options.software_flow_control) ? "nocrtscts" : "crtscts",                     
++	options.no_flow_control ? "nocrtscts" : "crtscts",
+ 	"defaultroute",
+ 	"usehostname",
+ 	"-detach",
+diff -ur wvdial-1.61/wvdialer.h wvdial-1.61_fix/wvdialer.h
+--- wvdial-1.61/wvdialer.h	2009-09-29 19:17:19.000000000 +0200
++++ wvdial-1.61_fix/wvdialer.h	2013-02-26 09:53:30.751489841 +0100
+@@ -141,6 +141,7 @@
+ 	int              idle_seconds;
+ 	int              isdn;
+ 	int              ask_password;
++	int              no_flow_control;
+ 	int              dial_timeout;
+        
+     } options;
