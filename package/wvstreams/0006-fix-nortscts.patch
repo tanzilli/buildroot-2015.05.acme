@@ -1,0 +1,11 @@
+--- wvstreams-4.6.1/streams/wvmodem.cc	2008-07-14 15:11:35.000000000 -0400
++++ wvstreams-4.6.1-fix/streams/wvmodem.cc	2016-07-22 03:38:46.337327770 -0400
+@@ -221,6 +221,8 @@
+     t.c_cflag |= (CS8 | CREAD | HUPCL | CLOCAL);
+     if(rtscts)
+         t.c_cflag |= CRTSCTS;
++    else
++        t.c_cflag &= ~CRTSCTS;
+     t.c_lflag &= ~(ISIG | XCASE | ECHO);
+     tcsetattr(getrfd(), TCSANOW, &t);
+     
